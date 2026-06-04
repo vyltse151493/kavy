@@ -1,21 +1,22 @@
-# Quiz Trí Tuệ - TypeScript + Next.js
+# 🎯 Quiz Trí Tuệ - TypeScript + Next.js
 
 Một ứng dụng quiz hiện đại được xây dựng bằng TypeScript và Next.js, sẵn sàng deploy lên Vercel.
 
-## 🎯 Tính Năng
+## ✨ Tính Năng
 
-- ✅ 15 câu hỏi trắc nghiệm
-- ⏱️ 20 giây cho mỗi câu hỏi
-- 📊 Thang điểm 100 điểm (6.67 điểm/câu)
-- ❌ Hết giờ = 0 điểm
-- 📱 Responsive design (mobile-friendly)
-- 🎨 Giao diện đẹp với gradient colors
-- 📈 Hiển thị kết quả chi tiết
+- ✅ **15 câu hỏi** - Trắc nghiệm về lịch sử, địa lý, khoa học
+- ⏱️ **20 giây/câu** - Timer đếm ngược tự động
+- 📊 **Thang điểm 100** - 6.67 điểm cho mỗi câu đúng
+- ❌ **Hết giờ = 0 điểm** - Không trả lời sẽ không có điểm
+- 📱 **Responsive Design** - Tối ưu cho mobile và desktop
+- 🎨 **Giao diện Đẹp** - Gradient colors, animations mượt mà
+- 📈 **Kết quả Chi tiết** - Hiển thị điểm và nhận xét
 
-## 🛠️ Công Nghệ
+## 🛠️ Tech Stack
 
-- **Next.js 14** - React framework
+- **Next.js 13** - React framework hiệu suất cao
 - **TypeScript** - Type-safe JavaScript
+- **React 18** - UI library
 - **CSS Modules** - Scoped styling
 - **Vercel** - Deployment platform
 
