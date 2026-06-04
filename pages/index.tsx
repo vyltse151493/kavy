@@ -192,8 +192,6 @@ export default function Home() {
             </div>
             <div className={styles.scoreDetails}>
               <p>✅ Câu trả lời đúng: {correctCount}/15</p>
-              <p>❌ Câu trả lời sai: {15 - correctCount}/15</p>
-              <p>📝 Mỗi câu: +{(100 / 15).toFixed(2)} / -{(100 / 15).toFixed(2)} điểm</p>
             </div>
             <button className={styles.restartBtn} onClick={restartQuiz}>
               Làm Lại Quiz
