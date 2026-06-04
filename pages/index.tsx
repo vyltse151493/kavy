@@ -10,7 +10,7 @@ export default function Home() {
   const [correctCount, setCorrectCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(20);
   const [answered, setAnswered] = useState(false);
-  const [answers, setAnswers] = useState<(number | null)[]>(new Array(15).fill(null));
+  const [answers, setAnswers] = useState<(number | null)[]>(new Array(quizData.length).fill(null));
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizEnded, setQuizEnded] = useState(false);
 
@@ -49,17 +49,15 @@ export default function Home() {
     setAnswers(newAnswers);
 
     const question = quizData[currentQuestionIndex];
-    const pointsPerQuestion = 100 / 15;
+    const pointsPerQuestion = 100 / quizData.length;
     if (index === question.correct) {
       setScore((prev) => prev + pointsPerQuestion);
       setCorrectCount((prev) => prev + 1);
-    } else {
-      setScore((prev) => Math.max(0, prev - pointsPerQuestion));
     }
   };
 
   const nextQuestion = () => {
-    if (currentQuestionIndex < 14) {
+    if (currentQuestionIndex < quizData.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       setAnswered(false);
       setTimeLeft(20);
@@ -74,12 +72,12 @@ export default function Home() {
     setCorrectCount(0);
     setTimeLeft(20);
     setAnswered(false);
-    setAnswers(new Array(15).fill(null));
+    setAnswers(new Array(quizData.length).fill(null));
     setQuizStarted(false);
     setQuizEnded(false);
   };
 
-  const progressPercentage = ((currentQuestionIndex + 1) / 15) * 100;
+  const progressPercentage = ((currentQuestionIndex + 1) / quizData.length) * 100;
   const finalScore = Math.round(score);
   const question: QuizQuestion = quizData[currentQuestionIndex];
 
@@ -96,9 +94,9 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Quiz Trí Tuệ - 15 Câu Hỏi</title>
+        <title>Quiz Trí Tuệ - {quizData.length} Câu Hỏi</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Trang web quiz với 15 câu hỏi, 20 giây/câu, thang điểm 100" />
+        <meta name="description" content={`Trang web quiz với ${quizData.length} câu hỏi, 20 giây/câu, thang điểm 100`} />
       </Head>
 
       <div className={styles.container}>
@@ -107,13 +105,13 @@ export default function Home() {
           <div className={styles.startSection}>
             <div className={styles.header}>
               <h1>🎯 Quiz Trí Tuệ</h1>
-              <p>15 câu hỏi, mỗi câu 20 giây</p>
+              <p>{quizData.length} câu hỏi, mỗi câu 20 giây</p>
             </div>
             <div className={styles.infoSection}>
               <p>⏱️ <strong>Thời gian:</strong> 20 giây/câu</p>
               <p>📊 <strong>Thang điểm:</strong> 100 điểm</p>
-              <p>✅ <strong>Câu đúng:</strong> +{(100 / 15).toFixed(2)} điểm</p>
-              <p>❌ <strong>Câu sai:</strong> -{(100 / 15).toFixed(2)} điểm</p>
+              <p>✅ <strong>Câu đúng:</strong> +{(100 / quizData.length).toFixed(2)} điểm</p>
+              <p>❌ <strong>Câu sai:</strong> 0 điểm</p>
             </div>
             <button className={styles.startBtn} onClick={startQuiz}>
               Bắt Đầu Quiz
@@ -126,7 +124,7 @@ export default function Home() {
               <div className={styles.progressFill} style={progressStyle}></div>
             </div>
             <div className={styles.questionCounter}>
-              Câu {currentQuestionIndex + 1}/15
+              Câu {currentQuestionIndex + 1}/{quizData.length}
             </div>
             <div className={`${styles.timer} ${timerClass}`}>
               {timeLeft}
@@ -193,7 +191,7 @@ export default function Home() {
               {getScoreMessage(finalScore)}
             </div>
             <div className={styles.scoreDetails}>
-              <p>✅ Câu trả lời đúng: {correctCount}/15</p>
+              <p>✅ Câu trả lời đúng: {correctCount}/{quizData.length}</p>
             </div>
             <button className={styles.restartBtn} onClick={restartQuiz}>
               Làm Lại Quiz
