@@ -153,7 +153,7 @@ export default function Home() {
                         name="option"
                         value={index}
                         checked={answers[currentQuestionIndex] === index}
-                        onChange={() => selectOption(index)}
+                        readOnly
                       />
                       {option}
                     </label>
