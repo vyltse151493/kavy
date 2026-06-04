@@ -7,6 +7,7 @@ import { QuizQuestion } from '@/lib/types';
 export default function Home() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(20);
   const [answered, setAnswered] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(new Array(15).fill(null));
@@ -51,6 +52,7 @@ export default function Home() {
     const pointsPerQuestion = 100 / 15;
     if (index === question.correct) {
       setScore((prev) => prev + pointsPerQuestion);
+      setCorrectCount((prev) => prev + 1);
     } else {
       setScore((prev) => Math.max(0, prev - pointsPerQuestion));
     }
@@ -69,6 +71,7 @@ export default function Home() {
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setScore(0);
+    setCorrectCount(0);
     setTimeLeft(20);
     setAnswered(false);
     setAnswers(new Array(15).fill(null));
@@ -78,7 +81,6 @@ export default function Home() {
 
   const progressPercentage = ((currentQuestionIndex + 1) / 15) * 100;
   const finalScore = Math.round(score);
-  const correctCount = Math.round(score / (100 / 15));
   const question: QuizQuestion = quizData[currentQuestionIndex];
 
   const getScoreMessage = (score: number) => {
