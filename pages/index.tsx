@@ -110,8 +110,6 @@ export default function Home() {
             <div className={styles.infoSection}>
               <p>⏱️ <strong>Thời gian:</strong> 20 giây/câu</p>
               <p>📊 <strong>Thang điểm:</strong> 100 điểm</p>
-              <p>✅ <strong>Câu đúng:</strong> +{(100 / quizData.length).toFixed(2)} điểm</p>
-              <p>❌ <strong>Câu sai:</strong> 0 điểm</p>
             </div>
             <button className={styles.startBtn} onClick={startQuiz}>
               Bắt Đầu Quiz
