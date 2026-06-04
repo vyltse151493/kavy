@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Trí Tuệ - 15 Câu Hỏi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .start-section {
+            text-align: center;
+        }
+
+        .start-section button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .start-section button:hover {
+            transform: scale(1.05);
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-counter {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+
+        .timer.warning {
+            background: #fff3cd;
+            color: #ff6b6b;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f5f5ff;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .option.correct {
+            border-color: #51cf66;
+            background: #f0fdf4;
+        }
+
+        .option.incorrect {
+            border-color: #ff6b6b;
+            background: #fef2f2;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .button-group button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            display: none;
+            text-align: center;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 60px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 30px 0;
+        }
+
+        .score-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .score-details {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .score-details p {
+            color: #666;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .time-expired {
+            text-align: center;
+            padding: 20px;
+            background: #fef2f2;
+            border: 2px solid #ff6b6b;
+            border-radius: 8px;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Section -->
+        <div class="start-section" id="startSection">
+            <div class="header">
+                <h1>🎯 Quiz Trí Tuệ</h1>
+                <p>15 câu hỏi, mỗi câu 20 giây</p>
+            </div>
+            <div style="text-align: center; margin: 20px 0; line-height: 1.8; color: #666;">
+                <p>⏱️ <strong>Thời gian:</strong> 20 giây/câu</p>
+                <p>📊 <strong>Thang điểm:</strong> 100 điểm</p>
+                <p>✅ <strong>Điều kiện:</strong> Trả lời đúng = có điểm</p>
+                <p>❌ <strong>Không trả lời:</strong> Không có điểm</p>
+            </div>
+            <button onclick="startQuiz()">Bắt Đầu Quiz</button>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-section" id="quizSection">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-counter">
+                Câu <span id="currentQuestion">1</span>/15
+            </div>
+            <div class="timer" id="timer">20</div>
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <div id="timeExpiredMessage" class="time-expired hidden">Hết thời gian! Không có điểm cho câu này.</div>
+            <div class="button-group">
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>Câu Tiếp Theo</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="header">
+                <h1>🎉 Kết Quả Quiz</h1>
+            </div>
+            <div class="score-display" id="scoreDisplay">0/100</div>
+            <div class="score-text" id="scoreMessage"></div>
+            <div class="score-details">
+                <p id="correctCount"></p>
+                <p id="pointPerQuestion"></p>
+            </div>
+            <button class="restart-btn" onclick="restartQuiz()">Làm Lại Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Thủ đô của Việt Nam là gì?",
+                options: ["TP. Hồ Chí Minh", "Hà Nội", "Đà Nẵng", "Huế"],
+                correct: 1
+            },
+            {
+                question: "Năm nào là Năm của Mèo trong lịch âm lịch Việt Nam?",
+                options: ["2020", "2021", "2023", "2022"],
+                correct: 2
+            },
+            {
+                question: "Ai là nhà giáo dục nổi tiếng của Việt Nam với phương pháp giáo dục tiến bộ?",
+                options: ["Phạm Văn Đồng", "Nguyễn Ái Quốc", "Phạm Ngũ Lão", "Trần Hưng Đạo"],
+                correct: 0
+            },
+            {
+                question: "Mộc Châu thuộc tỉnh nào?",
+                options: ["Thanh Hóa", "Sơn La", "Hòa Bình", "Lạng Sơn"],
+                correct: 1
+            },
+            {
+                question: "Dung tích lớn nhất của bộ não con người là bao nhiêu phần trăm?",
+                options: ["5%", "10%", "15%", "20%"],
+                correct: 2
+            },
+            {
+                question: "Đâu là loài động vật sống lâu nhất?",
+                options: ["Voi", "Rùa", "Cá mập", "Chim đại bàng"],
+                correct: 2
+            },
+            {
+                question: "Công thức hóa học của muối ăn là gì?",
+                options: ["NaCl", "NaOH", "HCl", "KCl"],
+                correct: 0
+            },
+            {
+                question: "Hành tinh xa Mặt Trời nhất trong Hệ Mặt Trời là gì?",
+                options: ["Sao Thủy", "Sao Hỏa", "Sao Thiên Vương", "Sao Hải Vương"],
+                correct: 3
+            },
+            {
+                question: "Ai là tác giả của tác phẩm 'Chí Phèo'?",
+                options: ["Nguyễn Huy Thiệp", "Mạc Tư Quân", "Vũ Trọng Phụng", "Phạm Duy Tốn"],
+                correct: 1
+            },
+            {
+                question: "Đỉnh núi cao nhất thế giới là gì?",
+                options: ["K2", "Mont Blanc", "Mount Everest", "Aconcagua"],
+                correct: 2
+            },
+            {
+                question: "Năm bao nhiêu Việt Nam giành độc lập?",
+                options: ["1930", "1945", "1954", "1975"],
+                correct: 1
+            },
+            {
+                question: "Loài cá nào là loài cá lớn nhất thế giới?",
+                options: ["Cá mập trắng", "Cá voi", "Cá chép", "Cá heo"],
+                correct: 1
+            },
+            {
+                question: "Ai là tác giả của bài thơ 'Chiều hoang'?",
+                options: ["Hàn Mạc Tử", "Tế Hanh", "Hồ Xuân Hương", "Nguyễn Bình"],
+                correct: 0
+            },
+            {
+                question: "Số nguyên tố đầu tiên là số nào?",
+                options: ["1", "2", "3", "4"],
+                correct: 1
+            },
+            {
+                question: "Châu lục lớn nhất thế giới là gì?",
+                options: ["Châu Âu", "Châu Phi", "Châu Á", "Châu Đại Dương"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 20;
+        let timerInterval = null;
+        let answered = false;
+        let answers = new Array(15).fill(null);
+
+        function startQuiz() {
+            document.getElementById('startSection').classList.remove('active');
+            document.getElementById('quizSection').classList.add('active');
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            const question = quizData[currentQuestionIndex];
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <label>
+                        <input type="radio" name="option" value="${index}" onchange="selectOption(${index})">
+                        ${option}
+                    </label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('timeExpiredMessage').classList.add('hidden');
+            document.getElementById('nextBtn').disabled = true;
+            answered = false;
+            timeLeft = 20;
+            updateProgressBar();
+            updateTimer();
+        }
+
+        function selectOption(index) {
+            if (timeLeft <= 0) return;
+            answered = true;
+            answers[currentQuestionIndex] = index;
+            document.getElementById('nextBtn').disabled = false;
+            
+            const question = quizData[currentQuestionIndex];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                if (i === question.correct) {
+                    opt.classList.add('correct');
+                } else if (i === index) {
+                    opt.classList.add('incorrect');
+                }
+                opt.style.pointerEvents = 'none';
+            });
+
+            if (index === question.correct) {
+                score += 100 / 15;
+            }
+
+            clearInterval(timerInterval);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 20;
+            updateTimer();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!answered) {
+                        document.getElementById('timeExpiredMessage').classList.remove('hidden');
+                        answers[currentQuestionIndex] = -1;
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.style.pointerEvents = 'none';
+                        });
+                    }
+                    document.getElementById('nextBtn').disabled = false;
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = timeLeft;
+            
+            if (timeLeft <= 5) {
+                timerElement.parentElement.classList.add('warning');
+            } else {
+                timerElement.parentElement.classList.remove('warning');
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / 15) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < 14) {
+                currentQuestionIndex++;
+                loadQuestion();
+                startTimer();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quizSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.add('active');
+            
+            const finalScore = Math.round(score);
+            const correctCount = Math.round(score / (100 / 15));
+            
+            document.getElementById('scoreDisplay').textContent = `${finalScore}/100`;
+            document.getElementById('correctCount').textContent = `✅ Câu trả lời đúng: ${correctCount}/15`;
+            document.getElementById('pointPerQuestion').textContent = `📝 Mỗi câu đúng: ${(100 / 15).toFixed(2)} điểm`;
+            
+            if (finalScore >= 80) {
+                document.getElementById('scoreMessage').textContent = "🏆 Tuyệt vời! Bạn là một thiên tài!";
+            } else if (finalScore >= 60) {
+                document.getElementById('scoreMessage').textContent = "👏 Rất tốt! Bạn thực sự thông minh!";
+            } else if (finalScore >= 40) {
+                document.getElementById('scoreMessage').textContent = "👍 Chưa tệ! Hãy tiếp tục cố gắng!";
+            } else {
+                document.getElementById('scoreMessage').textContent = "💪 Hãy cố gắng thêm lần nữa!";
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 20;
+            answered = false;
+            answers = new Array(15).fill(null);
+            
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('startSection').classList.add('active');
+        }
+    </script>
+</body>
+</html>
