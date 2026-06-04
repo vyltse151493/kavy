@@ -48,8 +48,11 @@ export default function Home() {
     setAnswers(newAnswers);
 
     const question = quizData[currentQuestionIndex];
+    const pointsPerQuestion = 100 / 15;
     if (index === question.correct) {
-      setScore((prev) => prev + 100 / 15);
+      setScore((prev) => prev + pointsPerQuestion);
+    } else {
+      setScore((prev) => Math.max(0, prev - pointsPerQuestion));
     }
   };
 
@@ -107,8 +110,8 @@ export default function Home() {
             <div className={styles.infoSection}>
               <p>⏱️ <strong>Thời gian:</strong> 20 giây/câu</p>
               <p>📊 <strong>Thang điểm:</strong> 100 điểm</p>
-              <p>✅ <strong>Điều kiện:</strong> Trả lời đúng = có điểm</p>
-              <p>❌ <strong>Không trả lời:</strong> Không có điểm</p>
+              <p>✅ <strong>Câu đúng:</strong> +{(100 / 15).toFixed(2)} điểm</p>
+              <p>❌ <strong>Câu sai:</strong> -{(100 / 15).toFixed(2)} điểm</p>
             </div>
             <button className={styles.startBtn} onClick={startQuiz}>
               Bắt Đầu Quiz
@@ -189,7 +192,8 @@ export default function Home() {
             </div>
             <div className={styles.scoreDetails}>
               <p>✅ Câu trả lời đúng: {correctCount}/15</p>
-              <p>📝 Mỗi câu đúng: {(100 / 15).toFixed(2)} điểm</p>
+              <p>❌ Câu trả lời sai: {15 - correctCount}/15</p>
+              <p>📝 Mỗi câu: +{(100 / 15).toFixed(2)} / -{(100 / 15).toFixed(2)} điểm</p>
             </div>
             <button className={styles.restartBtn} onClick={restartQuiz}>
               Làm Lại Quiz
